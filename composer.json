@@ -1,0 +1,34 @@
+{
+    "name": "czahoo/api-framework",
+    "type": "library",
+    "description": "Basic light weight framework for external or internal APIs",
+    "keywords": ["api","framework","czahoo","light"],
+    "homepage": "https://github.com/Czahoo/api-framework",
+    "license": "MIT",
+    "authors": [
+        {
+            "email": "czahoo@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Api\\": "src/"
+        },
+        "files": [
+            "src/Framework/Config.php",
+            "src/Framework/Functions.php",
+            "src/Framework/Traits.php",
+            "src/Framework/Autoloader.php",
+            "src/Framework/Framework.php"
+        ]
+    }
+}

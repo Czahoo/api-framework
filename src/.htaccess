@@ -1,0 +1,10 @@
+################# Paste text below on top of your .htaccess file ####################
+RewriteEngine on
+       
+RewriteCond %{REQUEST_URI} ^/internal_api/?(.+)$
+RewriteRule ^/?internal_api/?(.*)$ /Api/index.php?API_TYPE=internal&URL=$1 [NC,L,QSA]
+
+RewriteCond %{REQUEST_URI} ^/api/?(.+)$
+RewriteRule ^/?api/?(.*)$ /Api/index.php?URL=$1 [NC,L,QSA]
+
+#####################################################################################
