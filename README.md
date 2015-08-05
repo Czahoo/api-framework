@@ -6,9 +6,26 @@ After installing module using composer, you need to follow steps below:
 3. Create application folder inside your Api (by default it should be named 'App')
 4. Create Routing.php file where you put your routing config with basic structure as defined below:
 5. Implement 'show' method in your basic controller which will be called by default if no other method is passed
+6. Create index.php file with code as presented below
 6. To call default method in your basic controller type yoursitename.com/api/ (for external api) or yoursitename.com/internal_api/ (for internal api)
 7. To call method 'test' in your custom controller for internal api type yoursitename.com/api/custom_route/test
+
+File: index.php
+
+```php
+// Register vendor autoloader
+require_once '../vendor/autoload.php';
+
+// Start application
+session_start();
+Framework::detectContext($_GET['API_TYPE']);
+Framework::translateUrl($_GET['URL']);
+Framework::run();
 ```
+
+File: Routing.php
+
+```php
 $FRAMEWORK_ROUTING = array(
     Framework::API_TYPE_EXTERNAL => array(
         Framework::DEFAULT_CONTROLLER_ROUTE_NAME => 'Api\App\Basic\Controller\BasicControllerName',
