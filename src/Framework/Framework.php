@@ -252,7 +252,7 @@ class Framework
         $self = self::getInstance();
         
         // Register autoloader
-        $autoloader = new Autoloader(null, BASE_APPLICATION_FOLDER);
+        $autoloader = new Autoloader(null, $self->basePath);
         $autoloader->register();
         
         $controller = $self->getControllerToRun();
