@@ -3,7 +3,7 @@ namespace Api\Framework\Basic\Objects;
 
 /**
  * Basic response object used in controllers
- * 
+ *
  * @author Krzysztof Kalkhoff
  *        
  */
@@ -22,35 +22,35 @@ class Response
 
     /**
      * Object implementing ResponseInterface containing response body
-     * 
+     *
      * @var mixed
      */
     protected $object;
 
     /**
      * Raw content of response
-     * 
+     *
      * @var string
      */
     protected $content;
 
     /**
      * HTTP code of response
-     * 
+     *
      * @var int
      */
     protected $httpCode;
 
     /**
      * Array of string headers
-     * 
+     *
      * @var array
      */
     protected $headers = array();
 
     /**
      * Ordinary contructor
-     * 
+     *
      * @author Krzysztof Kalkhoff
      *        
      * @param string $content            
@@ -69,38 +69,94 @@ class Response
         }
     }
 
+    /**
+     * Set container for response content
+     * 
+     * @author Krzysztof Kalkhoff
+     *        
+     * @param ResponseInterface $obj            
+     * @return \Api\Framework\Basic\Objects\Response
+     */
     public function setObject(ResponseInterface $obj)
     {
         $this->object = $obj;
         $this->setContent($obj->getContent());
         $this->setContentType($obj->getContentType());
+        return $this;
     }
 
+    /**
+     * Set response content type
+     * 
+     * @author Krzysztof Kalkhoff
+     *        
+     * @param string $type            
+     * @return \Api\Framework\Basic\Objects\Response
+     */
     protected function setContentType($type)
     {
         $this->headers[] = "Content-Type: {$type}";
+        return $this;
     }
 
+    /**
+     * Set content of response
+     * 
+     * @author Krzysztof Kalkhoff
+     *        
+     * @param string $content            
+     * @return \Api\Framework\Basic\Objects\Response
+     */
     protected function setContent($content)
     {
         $this->content = $content;
+        return $this;
     }
 
+    /**
+     * Get content of response
+     * 
+     * @author Krzysztof Kalkhoff
+     *        
+     * @return string
+     */
     public function getContent()
     {
         return $this->content;
     }
 
+    /**
+     * Set http code for response
+     * 
+     * @author Krzysztof Kalkhoff
+     *        
+     * @param int $code            
+     * @return \Api\Framework\Basic\Objects\Response
+     */
     public function setHttpCode($code)
     {
         $this->httpCode = $code;
+        return $this;
     }
 
+    /**
+     * Get http code of response
+     * 
+     * @author Krzysztof Kalkhoff
+     * @return int
+     */
     public function getHttpCode()
     {
         return $this->httpCode;
     }
 
+    /**
+     * Get array of headers
+     * 
+     * @author Krzysztof Kalkhoff
+     *        
+     * @return array
+     */
     public function getHeaders()
     {
         return $this->headers;

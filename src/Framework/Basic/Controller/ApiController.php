@@ -91,6 +91,20 @@ abstract class ApiController
         return $this->getRequest()->validate();
     }
 
+    protected function respond($response = NULL) {
+        if(is_null($response)) {
+            $response = $this->getResponse();
+        }
+        
+        foreach ($response->getHeaders() as $header) {
+            header($header);
+        }
+        
+        http_response_code($response->getHttpCode());
+        
+        return $response->getContent();
+    }
+    
     /**
      * Log incoming request to file
      * 
