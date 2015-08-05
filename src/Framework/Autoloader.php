@@ -131,7 +131,7 @@ class Autoloader
         if (false !== ($namespacePosition = strripos($class, $this->namespaceSeparator))) {
             $namespace = substr($class, 0, $namespacePosition);
             $class = substr($class, $namespacePosition + 1);
-            $filename = str_replace($this->namespaceSeparator, DIRECTORY_SEPARATOR, strtolower($namespace)) . DIRECTORY_SEPARATOR;
+            $filename = str_replace($this->namespaceSeparator, DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
         }
         
         $filename .= $class . $this->fileExtension;
