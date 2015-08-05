@@ -6,7 +6,8 @@ use Api\Framework\Basic\Objects\JSON;
 
 class BasicController extends ApiController {
     public function show() {
+        // Create simple JSON response
         $json = new JSON(array('message' => 'Hello world!'));
-        return $this->getResponse()->setObject($json);
+        return $this->respond($this->getResponse()->setObject($json));
     }
 }
