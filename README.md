@@ -1,5 +1,6 @@
 # Framework for API
 After installing module using composer, you need to follow steps below:
+
 1. Add content of src/.htaccess to your .htaccess file or just copy it to your root directory if u don't have one
 2. Create basic folder for your API (by default it should be named 'Api')
 3. Create application folder inside your Api (by default it should be named 'App')
