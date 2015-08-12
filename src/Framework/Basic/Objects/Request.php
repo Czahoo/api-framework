@@ -236,7 +236,7 @@ class Request
     public function getParam($name, $type = self::TYPE_POST)
     {
         if (is_string($name)) {
-            if (preg_match('/\[.+\]/')) {
+            if (preg_match('/\[.+\]/', $name)) {
                 return $this->getParamByInputName($name, $type);
             } else {
                 return $this->getParamByKey($name, $type);
