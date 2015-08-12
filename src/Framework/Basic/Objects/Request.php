@@ -76,7 +76,7 @@ class Request
      *        
      * @return \Api\Framework\Basic\Objects\Request
      */
-    public function initFromGlobals()
+    public static function createFromGlobals()
     {
         return new self($_GET, $_POST);
     }

@@ -41,8 +41,7 @@ abstract class ApiController
     public function beforeRun()
     {
         $this->response = new Response();
-        $this->request = new Request();
-        $this->request->initFromGlobals();
+        $this->request = Request::createFromGlobals();
     }
 
     /**
