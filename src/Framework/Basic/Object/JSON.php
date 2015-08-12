@@ -1,5 +1,5 @@
 <?php
-namespace Api\Framework\Basic\Objects;
+namespace Api\Framework\Basic\Object;
 
 use Api\Framework\Errors\Error;
 

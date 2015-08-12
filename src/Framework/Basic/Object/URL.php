@@ -1,5 +1,5 @@
 <?php
-namespace Framework\Basic\Object;
+namespace Api\Framework\Basic\Object;
 
 class URL
 {

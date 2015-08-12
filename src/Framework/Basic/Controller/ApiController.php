@@ -2,8 +2,8 @@
 namespace Api\Framework\Basic\Controller;
 
 use Api\Framework\Basic\Utility\Logger;
-use Api\Framework\Basic\Objects\Request;
-use Api\Framework\Basic\Objects\Response;
+use Api\Framework\Basic\Object\Request;
+use Api\Framework\Basic\Object\Response;
 
 /**
  * Basic Controller for Api requests

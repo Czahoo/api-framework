@@ -1,5 +1,5 @@
 <?php
-namespace Api\Framework\Basic\Objects;
+namespace Api\Framework\Basic\Object;
 
 /**
  * Basic request object handling GET and POST data, used in controllers
