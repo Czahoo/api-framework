@@ -3,7 +3,7 @@ namespace Api\Framework\Basic\Object;
 
 /**
  * Basic request object handling GET and POST data, used in controllers
- * 
+ *
  * @author Krzysztof Kalkhoff
  * @author Mateusz Kleska
  *        
@@ -23,28 +23,28 @@ class Request
 
     /**
      * TODO Fill this
-     * 
+     *
      * @var string NULL
      */
     protected $endpoint = NULL;
 
     /**
      * TODO Fill this
-     * 
+     *
      * @var array
      */
     protected $params = array(self::TYPE_GET => array(),self::TYPE_POST => array());
 
     /**
      * TODO Fill this
-     * 
+     *
      * @var array NULL
      */
     protected $expectedParams = NULL;
 
     /**
      * If request is valid
-     * 
+     *
      * @var bool NULL
      */
     protected $valid = NULL;
@@ -71,7 +71,7 @@ class Request
 
     /**
      * Create request object using $_GET and $_POST
-     * 
+     *
      * @author Krzysztof Kalkhoff
      *        
      * @return \Api\Framework\Basic\Objects\Request
@@ -84,7 +84,7 @@ class Request
     /**
      * Check existance of params inside the object<br>
      * Returns true only if all params exist
-     * 
+     *
      * @author Krzysztof Kalkhoff
      *        
      * @param array $expectedKeys
@@ -95,8 +95,23 @@ class Request
      */
     public function checkParamsExistance($expectedKeys, $type = self::TYPE_POST)
     {
-        foreach ($expectedKeys as $key) {
-            if (! isset($this->params[$type][$key])) {
+        return $this->checkExistanceInArray($this->params[$type], $expectedKeys);
+    }
+
+    /**
+     * Check existance of keys in array
+     * 
+     * @author Krzysztof Kalkhoff
+     *        
+     * @param array $array            
+     * @param array $keys            
+     */
+    protected function checkExistanceInArray($array, $keys)
+    {
+        foreach ($keys as $k => $key) {
+            if (is_array($key) && ! $this->checkExistanceInArray($array[$k], $key)) {
+                return false;
+            } elseif (is_string($key) && ! isset($array[$key])) {
                 return false;
             }
         }
@@ -105,7 +120,7 @@ class Request
 
     /**
      * Trims params to list of keys passed in first argument
-     * 
+     *
      * @author Mateusz Kleska
      *        
      * @param array $expectedParams
@@ -131,7 +146,7 @@ class Request
 
     /**
      * Check if request is valid
-     * 
+     *
      * @author Krzysztof Kalkhoff
      *        
      * @return boolean
@@ -146,7 +161,7 @@ class Request
 
     /**
      * Validate request
-     * 
+     *
      * @author Krzysztof Kalkhoff
      *        
      * @return boolean
@@ -158,7 +173,7 @@ class Request
 
     /**
      * TODO Fill this
-     * 
+     *
      * @author Mateusz Kleska
      *        
      * @param string $name            
@@ -180,7 +195,7 @@ class Request
 
     /**
      * TODO Fill this
-     * 
+     *
      * @author Mateusz Kleska
      *        
      * @param string $name            
@@ -207,7 +222,7 @@ class Request
 
     /**
      * Get all params of passed type, returns empty array if params of that type doesn't exists
-     * 
+     *
      * @author Krzysztof Kalkhoff
      *        
      * @param string $type
@@ -225,7 +240,7 @@ class Request
      * 'User[test][test2]')</li>
      * <li>Array key (e.g. 'test_key')</li>
      * <li>Array of keys (e.g. array('test_key_1', 'test_key_2', 'test_key_3')</li>
-     * 
+     *
      * @author Krzysztof Kalkhoff
      *        
      * @param mixed $name            
@@ -249,7 +264,7 @@ class Request
 
     /**
      * Get param using array key
-     * 
+     *
      * @author Krzysztof Kalkhoff
      *        
      * @param string $key            
@@ -264,7 +279,7 @@ class Request
 
     /**
      * TODO Fill this
-     * 
+     *
      * @author Mateusz Kleska
      *        
      * @param string $name            
@@ -282,7 +297,7 @@ class Request
 
     /**
      * TODO Fill this
-     * 
+     *
      * @author Mateusz Kleska
      *        
      * @param unknown $currValue            
@@ -300,7 +315,7 @@ class Request
 
     /**
      * Get param using array of keys
-     * 
+     *
      * @author Krzysztof Kalkhoff
      *        
      * @param string $keys            
@@ -319,7 +334,7 @@ class Request
 
     /**
      * TODO Fill this
-     * 
+     *
      * @author Mateusz Kleska
      *        
      * @param string $fallbackToCurrent            
@@ -335,7 +350,7 @@ class Request
 
     /**
      * TODO Fill this
-     * 
+     *
      * @author Mateusz Kleska
      *        
      * @return Ambigous <unknown, string>
@@ -360,7 +375,7 @@ class Request
 
     /**
      * TODO Fill this
-     * 
+     *
      * @author Mateusz Kleska
      *        
      * @param string $fallbackToCurrentEndpoint            
@@ -374,7 +389,7 @@ class Request
 
     /**
      * TODO Fill this
-     * 
+     *
      * @author Mateusz Kleska
      *        
      * @param string $return            
@@ -398,7 +413,7 @@ class Request
 
     /**
      * TODO Fill this
-     * 
+     *
      * @author Mateusz Kleska
      *        
      * @return mixed
@@ -413,7 +428,7 @@ class Request
 
     /**
      * TODO Fill this
-     * 
+     *
      * @author Mateusz Kleska
      *        
      * @param string $asCsv            
