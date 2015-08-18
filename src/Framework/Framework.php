@@ -13,7 +13,7 @@ class Framework
 
     const LANG_POLISH = "pl";
 
-    const LANG_ENGLISH = "eng";
+    const LANG_ENGLISH = "en";
 
     const LOG_SESSION_NAME = "Log";
 
