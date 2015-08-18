@@ -5,13 +5,6 @@ interface ErrorInterface
 {
 
     /**
-     * Raw error message
-     * 
-     * @var string
-     */
-    protected $message;
-
-    /**
      * Get type of error
      * 
      * @author Krzysztof Kalkhoff
