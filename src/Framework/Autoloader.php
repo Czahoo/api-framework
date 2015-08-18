@@ -11,6 +11,10 @@ class Autoloader
     const DEFAULT_FILE_EXTENSION = ".php";
 
     const DEFAULT_NAMESPACE_SEPARATOR = "\\";
+    
+    const DEFAULT_DIR_SEPARATOR = "/";
+    
+    const AUTOLOAD_FUNCTION_NAME = "autoload";
 
     private $fileExtension;
 
@@ -32,10 +36,10 @@ class Autoloader
     public function __construct($namespace = '', $path = '')
     {
         $this->basicNamespace = $namespace;
-        $this->basicPath = removeTrailingSlash($path);
+        $this->basicPath = ($path == self::DEFAULT_DIR_SEPARATOR ? removeTrailingSlash($path) : $path);
         $this->fileExtension = self::DEFAULT_FILE_EXTENSION;
         $this->namespaceSeparator = self::DEFAULT_NAMESPACE_SEPARATOR;
-        if(endsWith($this->basicPath, "/") || endsWith($this->basicPath, DIRECTORY_SEPARATOR)) {
+        if(endsWith($this->basicPath, self::DEFAULT_DIR_SEPARATOR) || endsWith($this->basicPath, DIRECTORY_SEPARATOR)) {
             $this->basicPath = substr($this->basicPath, 0, -1);
         }
     }
@@ -92,7 +96,7 @@ class Autoloader
      */
     public function register()
     {
-        spl_autoload_register(array($this,'autoload'));
+        spl_autoload_register(array($this, self::AUTOLOAD_FUNCTION_NAME));
     }
 
     /**
@@ -103,7 +107,7 @@ class Autoloader
      */
     public function unregister()
     {
-        spl_autoload_unregister(array($this,'autoload'));
+        spl_autoload_unregister(array($this, self::AUTOLOAD_FUNCTION_NAME));
     }
 
     /**
