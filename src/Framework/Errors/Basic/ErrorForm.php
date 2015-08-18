@@ -37,7 +37,7 @@ class ErrorForm extends ErrorPrototype implements ErrorInterface
 
     public function getType()
     {
-        return Error::TYPE_FORM;
+        return self::TYPE;
     }
 
     public function getHTML()

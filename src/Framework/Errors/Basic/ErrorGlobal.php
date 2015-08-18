@@ -18,7 +18,7 @@ class ErrorGlobal extends ErrorPrototype implements ErrorInterface
 
     public function getType()
     {
-        return Error::TYPE_GLOBAL;
+        return self::TYPE;
     }
 
     public function getHTML()
