@@ -180,14 +180,14 @@ class Request
      * @param mixed $value            
      * @param string $type
      *            Param type (as defined in constants)
-     * @return \Api\Framework\Basic\Objects\Request
+     * @return Request
      */
     public function setParam($name, $value, $type = self::TYPE_POST)
     {
         switch ($type) {
             case self::TYPE_GET:
             case self::TYPE_POST:
-                $this->params[$type][$name] = $value;
+                $this->params[$type][$name] = (is_array($value) && is_array($this->params[$type][$name])) ? array_merge($this->params[$type][$name], $value) : $value;
                 break;
         }
         return $this;
