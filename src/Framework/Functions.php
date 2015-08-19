@@ -163,7 +163,8 @@ function debug($msg)
         echo '</pre>';
         exit();
     } else {
-        exit('Error occured, please contact server administrator');
+        trigger_error('Error: '.$msg, E_USER_ERROR);
+        //exit('Error occured, please contact server administrator');
     }
 }
 
