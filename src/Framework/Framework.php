@@ -2,6 +2,7 @@
 use Api\Framework\Basic\Traits\Singleton;
 use Api\Framework\Basic\Object\Server;
 use Api\Framework\Utility\Helper\Formatter;
+use Api\Framework\Basic\Object\Response;
 
 /**
  * Framework class handling routing and translating URL
