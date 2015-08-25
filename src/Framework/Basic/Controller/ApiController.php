@@ -95,13 +95,7 @@ abstract class ApiController
             $response = $this->getResponse();
         }
         
-        foreach ($response->getHeaders() as $header) {
-            header($header);
-        }
-        
-        http_response_code($response->getHttpCode());
-        
-        return $response->getContent();
+        return $response;
     }
     
     /**

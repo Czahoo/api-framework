@@ -2,6 +2,7 @@
 namespace Api\Framework\Errors;
 
 use Api\Framework\Errors\ErrorPrototype;
+use Api\Framework\Utility\Helper\ArrayHelper;
 
 /**
  * Basic class for error handling
@@ -66,7 +67,7 @@ class Error
      */
     public function hasErrors()
     {
-        return ! array_empty($this->list);
+        return ! ArrayHelper::isEmpty($this->list);
     }
 
     /**

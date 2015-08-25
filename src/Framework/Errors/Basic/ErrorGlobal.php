@@ -23,6 +23,6 @@ class ErrorGlobal extends ErrorPrototype implements ErrorInterface
 
     public function getHTML()
     {
-        return '<div class="error"><p>' . $this->message . '</p></div>';
+        return '<div class="error error-global"><p>' . $this->message . '</p></div>';
     }
 }

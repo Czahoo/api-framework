@@ -63,7 +63,7 @@ abstract class ErrorPrototype
                 break;
             
             default:
-                debug("Unknown message type");
+                \Framework::debug("Unknown message type");
                 break;
         }
     }

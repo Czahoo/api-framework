@@ -42,6 +42,6 @@ class ErrorForm extends ErrorPrototype implements ErrorInterface
 
     public function getHTML()
     {
-        return '<div class="form-error"><p>' . $this->message . '</p></div>';
+        return '<div class="error error-form"><p>' . $this->message . '</p></div>';
     }
 }

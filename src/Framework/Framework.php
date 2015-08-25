@@ -1,5 +1,7 @@
 <?php
-use Basic\Controller\ApiController;
+use Api\Framework\Basic\Traits\Singleton;
+use Api\Framework\Basic\Object\Server;
+use Api\Framework\Utility\Helper\Formatter;
 
 /**
  * Framework class handling routing and translating URL
@@ -9,7 +11,7 @@ use Basic\Controller\ApiController;
  */
 class Framework
 {
-    use Singleton, AutoGetters;
+    use Singleton;
 
     const LANG_POLISH = "pl";
 
@@ -38,6 +40,14 @@ class Framework
     const API_TYPE_EXTERNAL = "external";
 
     const API_TYPE_INTERNAL = "internal";
+    
+    const APP_FOLDER = "App";
+    
+    const TEMPLATES_FOLDER = "Template";
+    
+    const APP_CONFIG_FILENAME = "Config.php";
+    
+    const ROUTING_FILENAME = "Routing.php";
 
     /**
      * Application language
@@ -114,8 +124,43 @@ class Framework
         $this->methodArguments = array();
         $this->lang = self::LANG_POLISH;
         $this->basePath = $_SERVER['DOCUMENT_ROOT'].BASE_APPLICATION_FOLDER;
+        $this->loadFiles();
     }
 
+    private function loadFiles()
+    {
+        $this->loadConfig();
+        $this->loadRouting();
+    }
+    
+    private function loadConfig()
+    {
+        $path = self::APP_FOLDER.DIRECTORY_SEPARATOR.self::APP_CONFIG_FILENAME;
+        $template_path = __DIR__.DIRECTORY_SEPARATOR.self::TEMPLATES_FOLDER.DIRECTORY_SEPARATOR.self::APP_CONFIG_FILENAME;
+        if (file_exists($path)) {
+            require_once $path;
+        } elseif(file_exists($template_path)) {
+            copy($template_path, $path);
+            require_once $path;
+        } else {
+            self::debug("Can't load nor create config file");
+        }
+    }
+    
+    private function loadRouting()
+    {
+        $path = self::APP_FOLDER.DIRECTORY_SEPARATOR.self::ROUTING_FILENAME;
+        $template_path = __DIR__.DIRECTORY_SEPARATOR.self::TEMPLATES_FOLDER.DIRECTORY_SEPARATOR.self::ROUTING_FILENAME;
+        if (file_exists($path)) {
+            require_once $path;
+        } elseif(file_exists($template_path)) {
+            copy($template_path, $path);
+            self::debug("You must fill default controller in routing file at ".$path);
+        } else {
+            self::debug("Can't load nor create routing file");
+        }
+    }
+    
     /**
      * Get routing array<br><br>
      * Array must be formated as defined:<br>
@@ -135,11 +180,11 @@ class Framework
     private function getRouting()
     {
         if(empty($this->routingPath)) {
-            $this->routingPath = $this->basePath.ROUTING_PATH;
+            $this->routingPath = self::APP_FOLDER.DIRECTORY_SEPARATOR.self::ROUTING_FILENAME;
         }
 
         if (! file_exists($this->routingPath)) {
-            debug("You must create routing file at " . $this->routingPath);
+            self::debug("You must create routing file at " . $this->routingPath);
         }
         require_once $this->routingPath;
         
@@ -173,7 +218,7 @@ class Framework
             return new $controllerName();
         }
         
-        debug("Fatal error: Controller ({$controllerName}) not found");
+        self::debug("Fatal error: Controller ({$controllerName}) not found");
     }
 
     /**
@@ -203,30 +248,50 @@ class Framework
             return self::DEFAULT_CONTROLLER_ACTION;
         }
         
-        debug("Fatal error: no default method to run in " . get_class($controller));
+        self::debug("Fatal error: no default method to run in " . get_class($controller));
     }
-
+    
     /**
-     * Outputs content returned from controller
-     * 
-     * @author Krzysztof Kalkhoff
-     *        
-     * @param mixed $view            
+     * Function used for handling situation that shouldn't happen
+     *
+     * @param string $msg
      */
-    private function outputView($view)
+    public static function debug($msg)
     {
-        if (is_string($view) || is_numeric($view)) {
-            echo $view;
-        } elseif (is_object($view)) {
-            $method = self::DEFAULT_CONTROLLER_ACTION;
-            if (method_exists($view, $method)) {
-                echo $view->$method();
-            } else {
-                echo (string) $view;
-            }
-        } elseif (is_array($view)) {
-            print_r($view);
+        if (!defined("SERVER_LIVE") || (defined("SERVER_LIVE") && !SERVER_LIVE)) {
+            $return = "Requested URL: " . Server::getAbsoluteURL() . "<br>";
+            $return .= $msg . "<br>";
+            $return .= "<pre>";
+            $return .= print_r(debug_backtrace(), true);
+            $return .= "</pre>";
+            self::getInstance()->outputContent($return);
+        } else {
+            trigger_error($msg, E_USER_ERROR);
         }
+    }
+    
+    private function outputContent($content)
+    {
+        if (is_string($content) || is_numeric($content)) {
+            $content = new Response($content);
+        } elseif (is_object($content)) {
+            if (! ($content instanceof Response)) {
+                self::debug("Object returned in controller must be instance of Response");
+            }
+        } elseif (is_array($content)) {
+            $content = new Response(print_r($content, true));
+        } else {
+            $content = new Response();
+        }
+    
+        foreach ($content->getHeaders() as $header) {
+            header($header);
+        }
+    
+        http_response_code($content->getHttpCode());
+    
+        echo $content->getContent();
+        return true;
     }
 
     /**
@@ -265,14 +330,34 @@ class Framework
         if (method_exists($controller, 'beforeMethodRun'))
             $controller->beforeMethodRun();
             
-            // Get view
-        $view = call_user_func_array(array($controller,$method), $self->methodArguments);
+        $self->normalizeMethodArguments($controller, $method);
+        // Get content
+        $content = call_user_func_array(array($controller,$method), $self->methodArguments);
         
         // After running optional functions
         if (method_exists($controller, 'afterRun'))
             $controller->afterRun();
         
-        $self->outputView($view);
+        $self->outputContent($content);
+    }
+    
+    /**
+     *
+     * @param Controller $controller
+     * @param string $method
+     */
+    private function normalizeMethodArguments($controller, $method)
+    {
+        $reflection = new ReflectionMethod($controller, $method);
+        $numRequired = $reflection->getNumberOfRequiredParameters();
+        $numCurrent = count($this->methodArguments);
+        if ($numRequired > $numCurrent) {
+            // If request don't have enought arguments for method set it as invalid
+            $controller->getRequest()->setValid(false);
+            for ($i = ($numRequired - $numCurrent); $i --; $i > 0) {
+                $this->methodArguments[] = NULL;
+            }
+        }
     }
     
     /**
@@ -344,7 +429,7 @@ class Framework
         $return = array();
         if (! empty($url)) {
             $params = explode("/", $url);
-            $params = cleanData($params);
+            $params = Formatter::cleanData($params);
             
             if (count($params) != 0) {
                 foreach ($params as $nr => $param) {
@@ -446,7 +531,7 @@ class Framework
     public static function saveCommonData()
     {
         // Save needed data
-        $_SESSION[self::LAST_PAGE_SESSION_NAME] = currentPageURL();
+        $_SESSION[self::LAST_PAGE_SESSION_NAME] = Server::getAbsoluteURL();
     }
 
     /**

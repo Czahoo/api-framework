@@ -8,6 +8,7 @@
     "authors": [
         {
             "email": "czahoo@gmail.com",
+            "homepage": "http://czahoo.pl",
             "role": "Developer"
         }
     ],
@@ -24,9 +25,6 @@
             "Api\\": "src/"
         },
         "files": [
-            "src/Framework/Config.php",
-            "src/Framework/Functions.php",
-            "src/Framework/Traits.php",
             "src/Framework/Autoloader.php",
             "src/Framework/Framework.php"
         ]

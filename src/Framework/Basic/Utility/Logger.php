@@ -1,6 +1,8 @@
 <?php
 namespace Api\Framework\Basic\Utility;
 
+use Api\Framework\Utility\Helper\FileHelper;
+use Api\Framework\Utility\Helper\Formatter;
 /************************************** TODO: WRITE PHPDOC **************************************/ 
 class Logger
 {
@@ -107,7 +109,7 @@ class Logger
         if (is_array($msg)) {
             $msg = print_r($msg, true);
         }
-        fullmkdir($this->getDocumentRoot() . DIRECTORY_SEPARATOR . $this->logFolder);
+        FileHelper::makeDir($this->getDocumentRoot() . DIRECTORY_SEPARATOR . $this->logFolder);
         $loggedMsg = date('Y-m-d H:i:s') . ' : ' . $msg;
         if (! is_null($addData)) {
             $loggedMsg .= '; addit-data: ' . print_r($addData, TRUE);
@@ -119,7 +121,7 @@ class Logger
     protected function getDocumentRoot()
     {
         $documentRoot = $_SERVER['DOCUMENT_ROOT'];
-        if (endsWith($documentRoot, DIRECTORY_SEPARATOR)) {
+        if (Formatter::endsWith($documentRoot, DIRECTORY_SEPARATOR)) {
             $documentRoot = substr($documentRoot, 0, - 1);
         }
         return $documentRoot;
@@ -313,7 +315,7 @@ class Logger
                 $newSize = round((self::FILE_MAX_SIZE > 0 ? self::FILE_MAX_SIZE * self::TRUNCATE_LOGSIZE_FACTOR : 1e6), 0);
                 self::logStatic('logger_clean_truncate', 'Truncating too big file to ' . $newSize . ' bytes: ' . $filepath);
                 $filesTruncated ++;
-                truncateFileBeggining($filepath, $newSize);
+                //truncateFileBeggining($filepath, $newSize);
             }
         }
         
