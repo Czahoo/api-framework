@@ -36,7 +36,7 @@ class Autoloader
     public function __construct($namespace = '', $path = '')
     {
         $this->basicNamespace = $namespace;
-        $this->basicPath = ($path == self::DEFAULT_DIR_SEPARATOR ? removeTrailingSlash($path) : $path);
+        $this->basicPath = ($path == self::DEFAULT_DIR_SEPARATOR ? "" : $path);
         $this->fileExtension = self::DEFAULT_FILE_EXTENSION;
         $this->namespaceSeparator = self::DEFAULT_NAMESPACE_SEPARATOR;
         if(substr($this->basicPath, -1) === self::DEFAULT_DIR_SEPARATOR || substr($this->basicPath, -1) === DIRECTORY_SEPARATOR) {

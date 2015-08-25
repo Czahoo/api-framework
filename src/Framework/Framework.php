@@ -42,6 +42,8 @@ class Framework
 
     const API_TYPE_INTERNAL = "internal";
     
+    const BASE_FOLDER = "Api";
+    
     const APP_FOLDER = "App";
     
     const TEMPLATES_FOLDER = "Template";
@@ -124,19 +126,21 @@ class Framework
         $this->urlParams = array();
         $this->methodArguments = array();
         $this->lang = self::LANG_POLISH;
-        $this->basePath = $_SERVER['DOCUMENT_ROOT'].BASE_APPLICATION_FOLDER;
-        $this->loadFiles();
+        $this->basePath = $_SERVER['DOCUMENT_ROOT'].DIRECTORY_SEPARATOR.self::BASE_FOLDER.DIRECTORY_SEPARATOR;
+        $this->loadConfig();
     }
 
-    private function loadFiles()
-    {
-        $this->loadConfig();
-        $this->loadRouting();
+    private function getRoutingPath() {
+        return $this->basePath.self::APP_FOLDER.DIRECTORY_SEPARATOR.self::ROUTING_FILENAME;
+    }
+    
+    private function getConfigPath() {
+        return $this->basePath.self::APP_FOLDER.DIRECTORY_SEPARATOR.self::APP_CONFIG_FILENAME;
     }
     
     private function loadConfig()
     {
-        $path = self::APP_FOLDER.DIRECTORY_SEPARATOR.self::APP_CONFIG_FILENAME;
+        $path = $this->getConfigPath();
         $template_path = __DIR__.DIRECTORY_SEPARATOR.self::TEMPLATES_FOLDER.DIRECTORY_SEPARATOR.self::APP_CONFIG_FILENAME;
         if (file_exists($path)) {
             require_once $path;
@@ -150,10 +154,10 @@ class Framework
     
     private function loadRouting()
     {
-        $path = self::APP_FOLDER.DIRECTORY_SEPARATOR.self::ROUTING_FILENAME;
+        $path = $this->getRoutingPath();
         $template_path = __DIR__.DIRECTORY_SEPARATOR.self::TEMPLATES_FOLDER.DIRECTORY_SEPARATOR.self::ROUTING_FILENAME;
         if (file_exists($path)) {
-            require_once $path;
+            require $path;
         } elseif(file_exists($template_path)) {
             copy($template_path, $path);
             self::debug("You must fill default controller in routing file at ".$path);
@@ -181,14 +185,14 @@ class Framework
     private function getRouting()
     {
         if(empty($this->routingPath)) {
-            $this->routingPath = self::APP_FOLDER.DIRECTORY_SEPARATOR.self::ROUTING_FILENAME;
+            $this->loadRouting();
+        } else {
+            if (! file_exists($this->routingPath)) {
+                self::debug("You must create routing file at " . $this->routingPath);
+            }
+            require $this->routingPath;
         }
 
-        if (! file_exists($this->routingPath)) {
-            self::debug("You must create routing file at " . $this->routingPath);
-        }
-        require_once $this->routingPath;
-        
         return $FRAMEWORK_ROUTING;
     }
 
@@ -292,7 +296,6 @@ class Framework
         http_response_code($content->getHttpCode());
     
         echo $content->getContent();
-        return true;
     }
 
     /**
