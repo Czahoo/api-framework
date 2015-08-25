@@ -158,6 +158,7 @@ class Framework
         $template_path = __DIR__.DIRECTORY_SEPARATOR.self::TEMPLATES_FOLDER.DIRECTORY_SEPARATOR.self::ROUTING_FILENAME;
         if (file_exists($path)) {
             require $path;
+            return $FRAMEWORK_ROUTING;
         } elseif(file_exists($template_path)) {
             copy($template_path, $path);
             self::debug("You must fill default controller in routing file at ".$path);
@@ -185,15 +186,16 @@ class Framework
     private function getRouting()
     {
         if(empty($this->routingPath)) {
-            $this->loadRouting();
+            $routing = $this->loadRouting();
         } else {
             if (! file_exists($this->routingPath)) {
                 self::debug("You must create routing file at " . $this->routingPath);
             }
             require $this->routingPath;
+            $routing = $FRAMEWORK_ROUTING;
         }
 
-        return $FRAMEWORK_ROUTING;
+        return $routing;
     }
 
     /**
