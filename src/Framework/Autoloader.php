@@ -39,7 +39,7 @@ class Autoloader
         $this->basicPath = ($path == self::DEFAULT_DIR_SEPARATOR ? removeTrailingSlash($path) : $path);
         $this->fileExtension = self::DEFAULT_FILE_EXTENSION;
         $this->namespaceSeparator = self::DEFAULT_NAMESPACE_SEPARATOR;
-        if(endsWith($this->basicPath, self::DEFAULT_DIR_SEPARATOR) || endsWith($this->basicPath, DIRECTORY_SEPARATOR)) {
+        if(substr($this->basicPath, -1) === self::DEFAULT_DIR_SEPARATOR || substr($this->basicPath, -1) === DIRECTORY_SEPARATOR) {
             $this->basicPath = substr($this->basicPath, 0, -1);
         }
     }
@@ -123,7 +123,7 @@ class Autoloader
         $filename = '';
         
         if (! empty($this->basicNamespace)) {
-            if (startsWith($className, $this->basicNamespace . $this->namespaceSeparator, false)) {
+            if (mb_strtolower(substr($className, 0, strlen($this->basicNamespace . $this->namespaceSeparator))) === mb_strtolower($this->basicNamespace . $this->namespaceSeparator)) {
                 // Cut basic namespace
                 $class = substr($className, strlen($this->basicNamespace . $this->namespaceSeparator));
             } else {
