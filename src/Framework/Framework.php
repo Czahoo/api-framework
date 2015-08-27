@@ -335,6 +335,11 @@ class Framework
         
         if (method_exists($controller, 'beforeMethodRun'))
             $controller->beforeMethodRun();
+        
+        // If response was set in "before" functions, output it instead of method return value
+        if (! $controller->getResponse()->isEmpty()) {
+            return $self->outputContent($controller->getResponse());
+        }
             
         $self->normalizeMethodArguments($controller, $method);
         // Get content

@@ -47,9 +47,7 @@ abstract class ApiController
     /**
      * Get request object
      * 
-     * @author Krzysztof Kalkhoff
-     *        
-     * @return \Api\Framework\Basic\Objects\Request
+     * @return Request
      */
     protected function getRequest()
     {
@@ -59,8 +57,7 @@ abstract class ApiController
     /**
      * Get response object
      * 
-     * @author Krzysztof Kalkhoff
-     *        
+     * @return Response
      */
     protected function getResponse()
     {

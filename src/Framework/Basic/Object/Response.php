@@ -47,9 +47,16 @@ class Response
      * @var array
      */
     protected $headers = array();
+    
+    /**
+     * If response is empty (no content)
+     * 
+     * @var boolean
+     */
+    protected $empty;
 
     /**
-     * Ordinary contructor
+     * Contructor
      *
      * @author Krzysztof Kalkhoff
      *        
@@ -59,6 +66,7 @@ class Response
     {
         $this->httpCode = self::HTTP_CODE_SUCCESS;
         $this->setContentType(self::CONTENT_TYPE_HTML);
+        $this->empty = is_null($content);
         
         if (is_null($content)) {
             $this->content = '';
@@ -68,6 +76,14 @@ class Response
             $this->content = (string) $content;
         }
     }
+    
+    /**
+     * 
+     * @return boolean
+     */
+    public function isEmpty() {
+        return $this->empty;
+    }
 
     /**
      * Set container for response content
@@ -75,7 +91,7 @@ class Response
      * @author Krzysztof Kalkhoff
      *        
      * @param ResponseInterface $obj            
-     * @return \Api\Framework\Basic\Objects\Response
+     * @return Response
      */
     public function setObject(ResponseInterface $obj)
     {
@@ -91,7 +107,7 @@ class Response
      * @author Krzysztof Kalkhoff
      *        
      * @param string $type            
-     * @return \Api\Framework\Basic\Objects\Response
+     * @return Response
      */
     protected function setContentType($type)
     {
@@ -105,10 +121,11 @@ class Response
      * @author Krzysztof Kalkhoff
      *        
      * @param string $content            
-     * @return \Api\Framework\Basic\Objects\Response
+     * @return Response
      */
     protected function setContent($content)
     {
+        $this->empty = empty($content);
         $this->content = $content;
         return $this;
     }
@@ -131,7 +148,7 @@ class Response
      * @author Krzysztof Kalkhoff
      *        
      * @param int $code            
-     * @return \Api\Framework\Basic\Objects\Response
+     * @return Response
      */
     public function setHttpCode($code)
     {
