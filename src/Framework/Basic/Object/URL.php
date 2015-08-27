@@ -19,8 +19,8 @@ class URL
     const PARAM_QUERY = "query";
 
     const PARAM_FRAGMENT = "fragment";
-
-    protected $rawUrl, $url, $query;
+    
+    protected $rawUrl, $url, $query, $page = NULL;
 
     public function __construct($url)
     {
@@ -56,12 +56,18 @@ class URL
         $authority = !strlen($userinfo) ? $host : "$userinfo@$host";
         $hier_part = !strlen($authority) ? $path : "//$authority$path";
         $url       = !strlen($scheme) ? $hier_part : "$scheme:$hier_part";
+        $url       = is_null($this->page) ? $url : $url."/page-{$this->page}/";
         $url       = !strlen($query) ? $url : "$url?$query";
         $url       = !strlen($fragment) ? $url : "$url#$fragment";
         
         return $url;
     }
 
+    public function setPage($page) 
+    {
+        $this->page = min([intval($page), 1]);
+    }
+    
     public function appendQuery($query)
     {
         $append = array();
