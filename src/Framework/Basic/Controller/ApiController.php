@@ -49,7 +49,7 @@ abstract class ApiController
      * 
      * @return Request
      */
-    protected function getRequest()
+    public function getRequest()
     {
         return $this->request;
     }
@@ -59,7 +59,7 @@ abstract class ApiController
      * 
      * @return Response
      */
-    protected function getResponse()
+    public function getResponse()
     {
         return $this->response;
     }
