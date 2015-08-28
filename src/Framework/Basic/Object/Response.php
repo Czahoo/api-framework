@@ -13,6 +13,8 @@ class Response
     const CONTENT_TYPE_HTML = 'text/html';
 
     const CONTENT_TYPE_JSON = 'application/json';
+    
+    const CONTENT_TYPE_CSS = 'text/css';
 
     const HTTP_CODE_SUCCESS = 200;
 
@@ -62,19 +64,16 @@ class Response
      *        
      * @param string $content            
      */
-    public function __construct($content = null)
+    public function __construct($content = '', $contentType = NULL, $httpCode = NULL)
     {
-        $this->httpCode = self::HTTP_CODE_SUCCESS;
-        $this->setContentType(self::CONTENT_TYPE_HTML);
-        $this->empty = is_null($content);
-        
-        if (is_null($content)) {
-            $this->content = '';
-        } elseif (is_object($content) && $object instanceof ResponseInterface) {
+        if (is_object($content) && $object instanceof ResponseInterface) {
             $this->setObject($content);
         } else {
             $this->content = (string) $content;
         }
+        
+        $this->setContentType((is_null($contentType) ? self::CONTENT_TYPE_HTML : $contentType));
+        $this->setHttpCode((is_null($httpCode) ? self::HTTP_CODE_SUCCESS : $httpCode));
     }
     
     /**
@@ -106,15 +105,45 @@ class Response
      * 
      * @author Krzysztof Kalkhoff
      *        
-     * @param string $type            
+     * @param string $type
+     * @param boolean $append         
      * @return Response
      */
-    protected function setContentType($type)
+    public function setContentType($type, $append = true)
     {
-        $this->headers[] = "Content-Type: {$type}";
+        $contentType = "Content-Type: {$type}";
+        $this->setHeader($contentType, $append);
         return $this;
     }
 
+    /**
+     * Adds or replace headers array
+     *
+     * @param string|array $header
+     */
+    public function setHeader($header, $append = true)
+    {
+        if ($append) {
+            if (is_string($header)) {
+                $this->headers[] = $header;
+            } elseif (is_array($header)) {
+                $this->headers = array_merge($this->headers, $header);
+            } else {
+                \Framework::debug("Invalid header type");
+            }
+        } else {
+            if (is_string($header)) {
+                $header = array($header);
+            }
+            if (is_array($header)) {
+                $this->headers = $header;
+            } else {
+                \Framework::debug("Invalid header type");
+            }
+        }
+        return $this;
+    }
+    
     /**
      * Set content of response
      * 
@@ -123,7 +152,7 @@ class Response
      * @param string $content            
      * @return Response
      */
-    protected function setContent($content)
+    public function setContent($content)
     {
         $this->empty = empty($content);
         $this->content = $content;
