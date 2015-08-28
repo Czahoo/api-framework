@@ -55,7 +55,7 @@ class Response
      * 
      * @var boolean
      */
-    protected $empty;
+    protected $empty = true;
 
     /**
      * Contructor
