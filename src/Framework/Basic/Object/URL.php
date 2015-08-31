@@ -65,7 +65,7 @@ class URL
 
     public function setPage($page) 
     {
-        $this->page = min([intval($page), 1]);
+        $this->page = max([intval($page), 1]);
     }
     
     public function appendQuery($query)
