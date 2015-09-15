@@ -36,7 +36,7 @@ class Formatter
      */
     public static function makeDecimal($number, $decimals = 0)
     {
-        return number_format(makeFloat($number), $decimals, '.', '');
+        return number_format(self::makeFloat($number), $decimals, '.', '');
     }
 
     public static function cutString($string, $length)
