@@ -109,7 +109,7 @@ class Response
      * @param boolean $append         
      * @return Response
      */
-    public function setContentType($type, $append = true)
+    public function setContentType($type, $append = false)
     {
         $contentType = "Content-Type: {$type}";
         $this->setHeader($contentType, $append);
