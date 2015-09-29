@@ -508,6 +508,17 @@ class Framework
     {
         return ! empty(self::getInstance()->urlParams[self::PARAM_PAGE]) && self::getInstance()->urlParams[self::PARAM_PAGE] > 0 ? self::getInstance()->urlParams[self::PARAM_PAGE] : 1;
     }
+    
+    /**
+     * Get language (default "pl")
+     *
+     * @author Krzysztof Kalkhoff
+     *
+     */
+    public static function getLang()
+    {
+        return self::getInstance()->lang;
+    }
 
     /**
      * Get relative url of current call
