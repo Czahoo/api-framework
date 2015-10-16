@@ -76,9 +76,11 @@ class Request
      *        
      * @return \Api\Framework\Basic\Objects\Request
      */
-    public static function createFromGlobals()
+    public static function createFromGlobals($usePhpInput = true)
     {
-        return new self($_GET, $_POST);
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        return $usePhpInput ? new self($_GET, $post) : new self($_GET, $_POST);
     }
 
     /**
