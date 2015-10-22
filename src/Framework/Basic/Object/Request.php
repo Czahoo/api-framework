@@ -221,6 +221,13 @@ class Request
         }
         return $this;
     }
+    
+    public function removeParam($name, $type = self::TYPE_POST) {
+        if(isset($this->params[$type][$name])) {
+            unset($this->params[$type][$name]);
+        }
+        return $this;
+    }
 
     /**
      * Get all params of passed type, returns empty array if params of that type doesn't exists
