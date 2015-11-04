@@ -160,6 +160,11 @@ class Request
         }
         return $this->valid;
     }
+    
+    public function setValid($bool) {
+        $this->valid = (bool) $bool;
+        return $this;
+    }
 
     /**
      * Validate request
