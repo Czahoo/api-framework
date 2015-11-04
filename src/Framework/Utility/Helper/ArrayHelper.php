@@ -78,6 +78,6 @@ class ArrayHelper
      */
     public static function isAssoc(Array $array)
     {
-        return array_keys($array) !== range(0, count($arr) - 1);
+        return array_keys($array) !== range(0, count($array) - 1);
     }
 }
