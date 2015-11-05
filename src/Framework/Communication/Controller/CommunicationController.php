@@ -2,18 +2,23 @@
 namespace App\Communication\Controller;
 
 use Api\Framework\Basic\Controller\ApiController;
-use App\Communication\Object\Service;
-use App\Communication\Object\Message;
-use App\Communication\Object\Client;
+use Api\Framework\Communication\Object\Service;
+use Api\Framework\Communication\Object\Message;
+use Api\Framework\Communication\Object\Client;
 use Api\Framework\Utility\Helper\Formatter;
 use Api\Framework\Basic\Object\Request;
-use App\Basic\Object\Auth;
 use Api\Framework\Basic\Object\Response;
 
-class CommunicationController extends ApiController
+abstract class CommunicationController extends ApiController
 {
-    protected $validIP = array('127.0.0.1','37.59.14.17','178.32.200.204');
+    const DEFAULT_VALID_IP_ADDRESS = "127.0.0.1";
+    protected $validIP;
     protected $client;
+    
+    public function __construct() {
+        global $VALID_IP_ADDRESSES;
+        $this->validIP = (empty($VALID_IP_ADDRESSES)) ? [self::DEFAULT_VALID_IP_ADDRESS] : $VALID_IP_ADDRESSES;
+    }
     
     protected function authenticate() {
         $hash = Formatter::cleanData($this->getRequest()->getParam(Client::AUTH_PARAM_NAME, Request::TYPE_GET));
@@ -30,7 +35,7 @@ class CommunicationController extends ApiController
         if(!in_array($_SERVER['REMOTE_ADDR'], $this->validIP)) {
             return false;
         }
-        if(!Auth::checkHash($hash, $data)) {
+        if(!$this->getClient()->getAuth()->checkHash($hash, $data)) {
         	   return false;
         }
         return true;
@@ -39,7 +44,6 @@ class CommunicationController extends ApiController
     public function beforeRun() {
         $this->request = Request::createFromGlobals(false);
         $this->response = new Response();
-        $this->client = new Client();
         
         if(!$this->authenticate()) {
             $msg = new Message();
@@ -48,20 +52,15 @@ class CommunicationController extends ApiController
         }
     }
     
-    public function getClient() {
-        return $this->client;
-    }
+    /**
+     * 
+     * @author Krzysztof Kalkhoff
+     *
+     * @return \Api\Framework\Communication\Object\Client
+     */
+    abstract public function getClient();
     
     protected function respondMessage(Message $msg) {
         return $this->getResponse()->setContentType(Response::CONTENT_TYPE_JSON)->setContent($this->getClient()->parse($msg));
-    }
-    
-    /*
-     * Wywołanie pod tą metodę odpowiada tym samym message który został wysłany
-     * Przydatne do weryfikacji, że serwis wysyła i dostaje prawidłowe dane
-     */
-    public function test()
-    {
-        return $this->respondMessage($this->getClient()->recieve());
     }
 }
