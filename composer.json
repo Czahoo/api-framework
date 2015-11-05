@@ -9,11 +9,14 @@
         {
             "email": "czahoo@gmail.com",
             "homepage": "http://czahoo.pl",
-            "role": "Developer"
+            "role": "Founder"
         }
     ],
     "require": {
         "php": ">=5.4.0"
+    },
+    "require-dev": {
+        "curl/curl": "^1.2"
     },
     "extra": {
         "branch-alias": {

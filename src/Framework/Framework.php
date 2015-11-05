@@ -283,7 +283,8 @@ class Framework
             $content = new Response($content);
         } elseif (is_object($content)) {
             if (! ($content instanceof Response)) {
-                self::debug("Object returned in controller must be instance of Response");
+                // If object isn't Response then break
+                return;
             }
         } elseif (is_array($content)) {
             $content = new Response(print_r($content, true));
