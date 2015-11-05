@@ -1,5 +1,5 @@
 <?php
-namespace App\Communication\Controller;
+namespace Api\Framework\Communication\Controller;
 
 use Api\Framework\Basic\Controller\ApiController;
 use Api\Framework\Communication\Object\Service;
