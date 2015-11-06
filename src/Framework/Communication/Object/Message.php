@@ -65,7 +65,7 @@ class Message implements \JsonSerializable
     }
     
     public function getErrorsList() {
-        return array_merge($this->errors->getErorrsList(ErrorGlobal::TYPE), $this->errors->getErorrsList(ErrorForm::TYPE));
+        return array_merge($this->errors->getErrorsList(ErrorGlobal::TYPE), $this->errors->getErrorsList(ErrorForm::TYPE));
     }
 
     public function jsonSerialize()
