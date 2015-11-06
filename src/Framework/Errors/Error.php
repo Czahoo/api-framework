@@ -92,7 +92,7 @@ class Error
      * @param string $msgType            
      * @return array
      */
-    public function getErorrsList($type = NULL, $msgType = self::ERROR_MESSAGE_RAW)
+    public function getErrorsList($type = NULL, $msgType = self::ERROR_MESSAGE_RAW)
     {
         $return = array();
         if (is_null($type)) {
