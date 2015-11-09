@@ -19,7 +19,16 @@ class Message implements \JsonSerializable
 
     const KEY_ERRORS = "errors";
 
-    protected $data, $success;
+    /**
+     * Storage for message data
+     * @var array
+     */
+    protected $data;
+    /**
+     * Flag if operation was a success
+     * @var bool
+     */
+    protected $success;
 
     public function __construct($data = [])
     {
@@ -27,11 +36,26 @@ class Message implements \JsonSerializable
         $this->initFromData($data);
     }
 
+    /**
+     * If $data is null then return $value else return unchanged $data
+     * @author Krzysztof Kalkhoff
+     *
+     * @param mixed $data
+     * @param mixed $value
+     * @return mixed
+     */
     protected function defaultValue($data, $value)
     {
         return is_null($data) ? $value : $data;
     }
 
+    /**
+     * Used to parse array of data obtained from json to init object 
+     * @author Krzysztof Kalkhoff
+     *
+     * @param array $data
+     * @return Message
+     */
     public function initFromData($data)
     {
         $this->setData($this->defaultValue((!isset($data[self::KEY_ERRORS]) && !isset($data[self::KEY_SUCCESS]) ? $data : $data[self::KEY_DATA]), []))
@@ -40,18 +64,40 @@ class Message implements \JsonSerializable
         return $this;
     }
 
+    /**
+     * Set internal $data variable<br>
+     * <strong>Warning</strong>: data property contains all information about errors, message data and success, so this function will override it 
+     * @author Krzysztof Kalkhoff
+     *
+     * @param array $data
+     * @return Message
+     */
     public function setData($data)
     {
         $this->data = $data;
         return $this;
     }
 
-    public function setSuccess($bool)
+    /**
+     * Set success flag
+     * @author Krzysztof Kalkhoff
+     *
+     * @param bool $success
+     * @return Message
+     */
+    public function setSuccess($success)
     {
-        $this->success = $bool;
+        $this->success = $success;
         return $this;
     }
 
+    /**
+     * Set errors from array obtained through getErrorsList on Error object
+     * @author Krzysztof Kalkhoff
+     *
+     * @param array $errors
+     * @return Message
+     */
     public function setErrors($errors)
     {
         foreach ($errors as $error) {
@@ -64,10 +110,20 @@ class Message implements \JsonSerializable
         return $this;
     }
     
+    /**
+     * Get array representation of errors (merge global with forms)
+     * @author Krzysztof Kalkhoff
+     *
+     * @return array
+     */
     public function getErrorsList() {
         return array_merge($this->errors->getErrorsList(ErrorGlobal::TYPE), $this->errors->getErrorsList(ErrorForm::TYPE));
     }
 
+    /**
+     * (non-PHPdoc)
+     * @see JsonSerializable::jsonSerialize()
+     */
     public function jsonSerialize()
     {
         $return = [
@@ -78,16 +134,34 @@ class Message implements \JsonSerializable
         return $return;
     }
 
+    /**
+     * Return value of success flag
+     * @author Krzysztof Kalkhoff
+     *
+     * @return boolean
+     */
     public function isValid()
     {
         return $this->success;
     }
 
+    /**
+     * If data of message is empty
+     * @author Krzysztof Kalkhoff
+     *
+     * @return boolean
+     */
     public function isEmpty()
     {
         return empty($this->data);
     }
 
+    /**
+     * Get $data property
+     * @author Krzysztof Kalkhoff
+     *
+     * @return array
+     */
     public function getData()
     {
         return $this->data;
@@ -99,7 +173,7 @@ class Message implements \JsonSerializable
      *
      * @param array $dictionary Array containing mapping from old key to new key
      * @param string $removeOldKey If after successful mapping old key should be removed from returned array
-     * @param bool|array $initWithData Can be bool to set that we init data with $this->getData() function or array to init directectly with passed data
+     * @param boolean|array $initWithData Can be bool to set that we init data with $this->getData() function or array to init directectly with passed data
      * @return array
      */
     public function translateData($dictionary, $removeOldKey = true, $initWithData = true)

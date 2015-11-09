@@ -11,6 +11,10 @@ class Client
 
     const DATA_PARAM_NAME = "data";
     
+    /**
+     * Stores object for authentication
+     * @var AuthenticationInterface
+     */
     protected $auth;
 
     public function __construct(AuthenticationInterface $authentication)
@@ -30,9 +34,9 @@ class Client
 
     /**
      *
-     * @param \App\Communication\Object\Service $service
-     * @param \App\Communication\Object\Message $message
-     * @return \App\Communication\Object\Message
+     * @param Service $service
+     * @param Message $message
+     * @return Message
      */
     public function send(Service $service, Message $message)
     {
@@ -60,7 +64,7 @@ class Client
 
     /**
      * @param string $data
-     * @return \App\Communication\Object\Message
+     * @return Message
      */
     protected function decode($data)
     {
@@ -74,7 +78,7 @@ class Client
     }
 
     /**
-     * @return \App\Communication\Object\Message
+     * @return Message
      */
     public function recieve()
     {
