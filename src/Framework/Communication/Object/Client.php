@@ -59,7 +59,7 @@ class Client
     }
     
     public function parse(Message $message) {
-        return json_encode($message, JSON_NUMERIC_CHECK);
+        return json_encode($message);
     }
 
     /**
