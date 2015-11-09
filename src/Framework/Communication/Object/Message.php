@@ -166,28 +166,4 @@ class Message implements \JsonSerializable
     {
         return $this->data;
     }
-
-    /**
-     * Translates data from message using several conditions
-     * @author Krzysztof Kalkhoff
-     *
-     * @param array $dictionary Array containing mapping from old key to new key
-     * @param string $removeOldKey If after successful mapping old key should be removed from returned array
-     * @param boolean|array $initWithData Can be bool to set that we init data with $this->getData() function or array to init directectly with passed data
-     * @return array
-     */
-    public function translateData($dictionary, $removeOldKey = true, $initWithData = true)
-    {
-        $data = $this->getData();
-        $return = is_bool($initWithData) ? ($initWithData ? $data : []) : (is_array($initWithData) ? $initWithData : []);
-        foreach ($dictionary as $oldKey => $newKey) {
-            if (isset($data[$oldKey])) {
-                $return[$newKey] = $data[$oldKey];
-                if($removeOldKey && isset($return[$oldKey])) {
-                    unset($return[$oldKey]);
-                }
-            }
-        }
-        return $return;
-    }
 }

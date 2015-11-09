@@ -18,6 +18,29 @@ class Formatter
     const HTML_STYLE_ATTRIBUTE = "style";
 
     /**
+     * Translates data using several conditions
+     * @author Krzysztof Kalkhoff
+     *
+     * @param array $dictionary Array containing mapping from old key to new key
+     * @param boolean $initWithData If return data will be initated with $data value
+     * @param string $removeOldKey If after successful mapping old key should be removed from returned array
+     * @return array
+     */
+    public static function translateData($data, $dictionary, $initWithData = true, $removeOldKey = true)
+    {
+        $return = $initWithData ? $data : [];
+        foreach ($dictionary as $oldKey => $newKey) {
+            if (isset($data[$oldKey])) {
+                $return[$newKey] = $data[$oldKey];
+                if($removeOldKey && isset($return[$oldKey])) {
+                    unset($return[$oldKey]);
+                }
+            }
+        }
+        return $return;
+    }
+    
+    /**
      * Make number float
      *
      * @param number $number
