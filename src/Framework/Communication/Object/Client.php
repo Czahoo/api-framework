@@ -81,6 +81,7 @@ class Client
         if (! $return->isValid() && !$return->hasErrors()) {
             $return->addError('Decoded message is not valid, but no errors were set');
         }
+        return $return;
     }
 
     /**
