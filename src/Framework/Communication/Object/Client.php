@@ -74,7 +74,13 @@ class Client
         } else {
             $return->initFromData($decodedData);
         }
-        return $return->setSuccess(!$return->hasErrors());
+        // MK: wykomentowalem, bo to ingoruje "success: 0" bez errorow
+        //return $return->setSuccess(!$return->hasErrors());
+
+        //jesli byl ustawiony success=0, ale brak errorow - dodaj domyslny
+        if (! $return->isValid() && !$return->hasErrors()) {
+            $return->addError('Decoded message is not valid, but no errors were set');
+        }
     }
 
     /**
