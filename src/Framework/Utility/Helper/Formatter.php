@@ -278,7 +278,7 @@ class Formatter
     }
 
     /**
-     * Remove trailing slash from given string
+     * Remove trailing slash or directory separator from given string
      *
      * @param string $string
      * @return string
@@ -286,8 +286,23 @@ class Formatter
     public static function removeTrailingSlash($string)
     {
         $return = $string;
-        if (self::startsWith($return, "/")) {
+        if (self::startsWith($return, "/") || self::startsWith($return, DIRECTORY_SEPARATOR)) {
             $return = ($tmp = substr($return, 1)) ? $tmp : '';
+        }
+        return $return;
+    }
+    
+    /**
+     * Remove ending slash or directory separator from given string
+     *
+     * @param string $string
+     * @return string
+     */
+    public static function removeLeadingSlash($string)
+    {
+        $return = $string;
+        if (self::endsWith($return, "/") || self::endsWith($return, DIRECTORY_SEPARATOR)) {
+            $return = ($tmp = substr($return, 0, -1)) ? $tmp : '';
         }
         return $return;
     }

@@ -1,17 +1,29 @@
 <?php
 namespace Api\Framework\Utility\Helper;
 
-class FileHelper {
-    public static function makeDir($dir) {
-        if (! is_dir($folder)) {
-            $path = explode(DIRECTORY_SEPARATOR, $folder);
+class FileHelper
+{
+
+    const DIR_SEPARATOR = "/";
+
+    /**
+     * Recursively create given directory
+     *
+     * @param string $dir            
+     * @return boolean
+     */
+    public static function makeDir($dir)
+    {
+        $dir = str_replace(DIRECTORY_SEPARATOR, self::DIR_SEPARATOR, Formatter::removeLeadingSlash($dir));
+        if (! is_dir($dir)) {
+            $path = explode(self::DIR_SEPARATOR, $dir);
             $tmpPath = "";
             foreach ($path as $nr => $subFolder) {
                 if (empty($subFolder)) {
-                    $tmpPath .= DIRECTORY_SEPARATOR;
+                    $tmpPath .= self::DIR_SEPARATOR;
                 }
-        
-                $tmpPath .= $subFolder . DIRECTORY_SEPARATOR;
+                
+                $tmpPath .= $subFolder . self::DIR_SEPARATOR;
                 if (! is_dir($tmpPath)) {
                     mkdir($tmpPath);
                 }
@@ -19,10 +31,17 @@ class FileHelper {
         }
         return true;
     }
-    
-    public static function removeDir($dir) {
-        if (! endsWith($dir, DIRECTORY_SEPARATOR)) {
-            $dir .= DIRECTORY_SEPARATOR;
+
+    /**
+     * Recursively remove given directory
+     *
+     * @param string $dir            
+     * @return boolean
+     */
+    public static function removeDir($dir)
+    {
+        if (! Formatter::endsWith($dir, DIRECTORY_SEPARATOR) && ! Formatter::endsWith($dir, self::DIR_SEPARATOR)) {
+            $dir .= self::DIR_SEPARATOR;
         }
         
         if (! is_dir($dir)) {
@@ -35,15 +54,15 @@ class FileHelper {
                 if ($file != "." && $file != "..") {
                     if (is_dir($dir . $file)) {
                         $dirsToVisit[] = $dir . $file;
-                    } else
-                    if (is_file($dir . $file)) {
-                        unlink($dir . $file);
-                    }
+                    } else 
+                        if (is_file($dir . $file)) {
+                            unlink($dir . $file);
+                        }
                 }
             }
             closedir($handle);
             foreach ($dirsToVisit as $i => $w) {
-                fullrmdir($w);
+                self::removeDirectory($w);
             }
         }
         rmdir($dir);
