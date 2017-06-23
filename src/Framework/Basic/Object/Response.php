@@ -69,7 +69,7 @@ class Response
         if (is_object($content) && $object instanceof ResponseInterface) {
             $this->setObject($content);
         } else {
-            $this->content = (string) $content;
+            $this->setContent((string) $content);
         }
         
         $this->setContentType((is_null($contentType) ? self::CONTENT_TYPE_HTML : $contentType));
